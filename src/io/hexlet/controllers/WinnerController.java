@@ -1,127 +1,83 @@
 package io.hexlet.controllers;
 
+
 import io.hexlet.model.Field;
 import io.hexlet.model.Point;
+import io.hexlet.model.Figure;
+import io.hexlet.model.exceptions.InvalidPointException;
 
 public class WinnerController {
 
-    private String checkRows(Field field) {
-
-        int sizeField;
-        sizeField = field.getSize() ;
-
-        for (int i=0;i<sizeField;i++) {
-
-            for (int j=0;j<sizeField;j++) {
-
-                if (j == sizeField - 1) {
-                        return  field.getFigure(new Point(i,j));
-                }
-
-                if ( field.getFigure(new Point(i,j+1)) == null || field.getFigure(new Point(i,j)) == null) {
-                    break;
-                }
-                if (field.getFigure(new Point(i, j + 1)).equals(field.getFigure(new Point(i, j)))) {
-                    if (j + 1 == sizeField) {
-                        return field.getFigure(new Point(i, j));
-                    }
-                }
-                else {
-                    break;
-                }
-
-            }
+    public Figure getWinner(final Field field) {
+        Figure winner;
+        for (int i = 0; i < field.getSize(); i++) {
+            winner = checkRow(field, i);
+            if (winner != null) return winner;
+            winner = checkColumn(field, i);
+            if (winner != null) return winner;
         }
+        winner = checkDiag1(field);
+        if (winner != null) return winner;
+        winner = checkDiag2(field);
+        if (winner != null) return winner;
 
         return null;
     }
 
-    private String checkColumns(Field field) {
-        int sizeField;
-        sizeField = field.getSize() ;
+    private Figure checkDiag1(final Field field) {
+        final Point p1 = new Point(0, 0);
+        final Point p2 = new Point(1, 1);
+        final Point p3 = new Point(2, 2);
 
-        for (int j=0;j<sizeField;j++) {
-
-            for (int i=0;i<sizeField;i++) {
-
-                if (i == sizeField - 1) {
-                    return  field.getFigure(new Point(i,j));
-                }
-
-                if ( field.getFigure(new Point(i+1,j)) == null || field.getFigure(new Point(i,j)) == null ) {
-                    break;
-                }
-                if (field.getFigure(new Point(i + 1, j)).equals(field.getFigure(new Point(i, j)))) {
-                    if (i + 1 == sizeField) {
-                        return field.getFigure(new Point(i, j));
-                    }
-                }
-                else {
-                    break;
-                }
-
-            }
-        }
-
-        return null;
-    }
-
-    private String checkLeftRightDiagonal(Field field) {
-
-        for (int i=0; i<field.getSize();i++) {
-
-            if (i==field.getSize() - 1) {
-                return field.getFigure(new Point(i,i));
-            }
-            if (field.getFigure(new Point(i,i)) == null || field.getFigure(new Point(i+1,i+1)) == null ){
-                break;
-            }
-            if (!field.getFigure(new Point(i,i)).equals(field.getFigure(new Point(i+1,i+1)))) {
-                break;
-            }
+        if (field.getFigure(p1) != null && field.getFigure(p2) != null &&
+                field.getFigure(p3) != null &&
+                field.getFigure(p1).equals(field.getFigure(p2)) &&
+                field.getFigure(p1).equals(field.getFigure(p3))) {
+            return field.getFigure(p1);
         }
         return null;
     }
 
-    private String checkRightLeftDiagonal(Field field) {
+    private Figure checkDiag2(final Field field) {
 
-        int sizeField;
-        sizeField = field.getSize() - 1;
+        final Point p1 = new Point(2, 0);
+        final Point p2 = new Point(1, 1);
+        final Point p3 = new Point(0, 2);
 
-        for (int i=0; i<field.getSize();i++) {
-
-            if (i==sizeField) {
-                return field.getFigure(new Point(i,sizeField - i));
-            }
-            if ( field.getFigure(new Point(i,sizeField - i)) == null || field.getFigure(new Point(i+1,sizeField-i-1)) == null ) {
-                break;
-            }
-            if (!field.getFigure(new Point(i,sizeField - i)).equals(field.getFigure(new Point(i+1,sizeField-i-1)))) {
-                break;
-            }
+        if (field.getFigure(p1) != null && field.getFigure(p2) != null
+                && field.getFigure(p3) != null &&
+                field.getFigure(p1).equals(field.getFigure(p2)) &&
+                field.getFigure(p1).equals(field.getFigure(p3))) {
+            return field.getFigure(p1);
         }
         return null;
     }
 
-    public String getWinner(Field field) {
-        String winner;
-        winner = checkRows(field);
-        if (winner != null) {
-            return winner;
-        }
-        winner = checkColumns(field);
-        if (winner != null) {
-            return winner;
-        }
-        winner = checkLeftRightDiagonal(field);
-        if (winner != null) {
-            return winner;
-        }
-        winner = checkRightLeftDiagonal(field);
-        if (winner != null) {
-            return winner;
-        }
+    private Figure checkColumn(final Field field, final Integer i) {
+        final Point p1 = new Point(0, i);
+        final Point p2 = new Point(1, i);
+        final Point p3 = new Point(2, i);
 
+        if (field.getFigure(p1) != null && field.getFigure(p2) != null
+                && field.getFigure(p3) != null &&
+                field.getFigure(p1).equals(field.getFigure(p2)) &&
+                field.getFigure(p1).equals(field.getFigure(p3))) {
+            return field.getFigure(p1);
+        }
+        return null;
+    }
+
+    private Figure checkRow(final Field field, final Integer i) {
+        final Point p1 = new Point(i, 0);
+        final Point p2 = new Point(i, 1);
+        final Point p3 = new Point(i, 2);
+
+        if (field.getFigure(p1) != null && field.getFigure(p2) != null
+                && field.getFigure(p3) != null &&
+                field.getFigure(p1).equals(field.getFigure(p2)) &&
+                field.getFigure(p1).equals(field.getFigure(p3))) {
+            return field.getFigure(p1);
+        }
         return null;
     }
 }

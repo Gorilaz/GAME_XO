@@ -1,49 +1,41 @@
 package io.hexlet.view;
 
-
-import io.hexlet.controllers.CurrentMoveController;
-import io.hexlet.controllers.MoveController;
-import io.hexlet.controllers.WinnerController;
 import io.hexlet.model.Field;
 import io.hexlet.model.Figure;
-import io.hexlet.model.Game;
 import io.hexlet.model.Point;
 
+public class ConsoleView implements ICoordinateGetter {
 
-import java.util.InputMismatchException;
-import java.util.Scanner;
+    public Point getMoveCoordinate(final Field field) {
+        return new Point(0, 0);
+    }
 
-public class ConsoleView {
-
-    // BEGIN (write your solution here)
-
-    // END
-    public void show(final Game game) {
-        final Field field = game.getField();
-
-        for (int a = 0; a < field.getSize(); a++) {
-            if (a != 0)
+    public void show(final Field field) {
+        final StringBuilder fieldBuilder = new StringBuilder();
+        for (int x = 0; x < field.getSize(); x++) {
+            if (x != 0)
                 generateSeparator(fieldBuilder);
-            generateLine(field, a, fieldBuilder);
+            generateLine(field, x, fieldBuilder);
         }
         System.out.println(fieldBuilder.toString());
     }
 
     void generateLine(final Field field,
-                      final int c,
+                      final int x,
                       final StringBuilder sb) {
-        // BEGIN (write your solution here)
-
-        // END
+        for (int y = 0; y < field.getSize(); y++) {
+            if (y != 0)
+                sb.append("|");
+            sb.append(" ");
+            final Figure figure;
+            figure = field.getFigure(new Point(y, x));
+            sb.append(figure != null ? figure : " ");
+            sb.append(" ");
+        }
+        sb.append("\n");
     }
 
     void generateSeparator(final StringBuilder sb) {
-        // BEGIN (write your solution here)
-
-        // END
-    }
-
-    public StringBuilder getFieldBuilder() {
-        return fieldBuilder;
+        sb.append("~~~~~~~~~~~\n");
     }
 }
